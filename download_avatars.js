@@ -14,18 +14,31 @@ function getRepoContributors(repoOwner, repoName, cb) {
   }
 
   request(options, function(err, res, body) {
-    // the callback function is so hard to understand
-    cb(err, body);
-    var arr = JSON.parse(body);
 
-    for (var i = 0; i < arr.length; i++) {
-      console.log(arr[i].avatar_url);
+    var result = JSON.parse(body);
+    for (var i = 0; i < result.length; i++) {
+     var filePath = 'image'+i+'.jpg';
+     var url = result[i].avatar_url;
+     cb(url, filePath);
     }
   });
+}
+
+function downloadImageByURL(url, filePath) {
+   var fs = require('fs');
+  request.get(url)
+         .on('error', function(err){
+          throw err;
+         })
+         .on('response', function(response){
+
+         })
+
+         .pipe(fs.createWriteStream(filePath));
+
 
 }
 
-getRepoContributors("jquery", "jquery", function(err, result) {
-  console.log("Errors:", err);
- // console.log("Result:", result);
-});
+
+getRepoContributors("jquery", "jquery", downloadImageByURL);
+
