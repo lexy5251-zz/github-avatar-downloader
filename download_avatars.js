@@ -14,11 +14,14 @@ function getRepoContributors(repoOwner, repoName, cb) {
   }
 
   request(options, function(err, res, body) {
-
+    if (options.repoOwner === undefined|| options.repoName === undefined){
+      console.log("some thing wrong!");
+    }
     var result = JSON.parse(body);
     for (var i = 0; i < result.length; i++) {
-     var filePath = 'image'+i+'.jpg';
+     var filePath = 'image/image'+i+'.jpg';
      var url = result[i].avatar_url;
+     console.log('Downloaded image from ' + url);
      cb(url, filePath);
     }
   });
@@ -36,9 +39,8 @@ function downloadImageByURL(url, filePath) {
 
          .pipe(fs.createWriteStream(filePath));
 
-
 }
 
 
-getRepoContributors("jquery", "jquery", downloadImageByURL);
+getRepoContributors(process.argv[2], process.argv[3], downloadImageByURL);
 
